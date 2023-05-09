@@ -282,9 +282,12 @@ import fs from 'fs';
     // padding
     if(padding !== '2'){
         console.log('padding...');
-        await page.waitForSelector('#customizations > div > label:nth-child(19) > span > input[type=range]');
-        const rangeInput3 = await page.$('#customizations > div > label:nth-child(19) > span > input[type=range]');
-        await rangeInput3.type(padding, { delay: 100 });
+        await page.$eval('#customizations > div > label:nth-child(19) > span > input[type=range]', (element, value) => {
+            element.value = value;
+        }, padding);
+        await page.focus('#customizations > div > label:nth-child(19) > span > input[type=range]');
+        await page.keyboard.press('ArrowRight');
+        await page.keyboard.press('ArrowLeft');
     }
 
     console.log('rendering...');
