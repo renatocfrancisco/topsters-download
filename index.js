@@ -228,12 +228,21 @@ import fs from 'fs';
         await page.waitForSelector('#customizations > div > label:nth-child(3) > span > input[type=range]');
         await new Promise(r => setTimeout(r, 2000));
 
-        const rangeInput1 = await page.$('#customizations > div > label:nth-child(3) > span > input[type=range]');
-        await rangeInput1.type(String(size_arr[0]), { delay: 100 });
+        await page.$eval('#customizations > div > label:nth-child(3) > span > input[type=range]', (element, value) => {
+            element.value = value;
+        }, String(size_arr[0]));
+        // focus on the input and then type right and left arrow to trigger the change event
+        await page.focus('#customizations > div > label:nth-child(3) > span > input[type=range]');
+        await page.keyboard.press('ArrowRight');
+        await page.keyboard.press('ArrowLeft');
         await new Promise(r => setTimeout(r, 2000));
 
-        const rangeInput2 = await page.$('#customizations > div > label:nth-child(5) > span > input[type=range]');
-        await rangeInput2.type(String(size_arr[1]), { delay: 100 })
+        await page.$eval('#customizations > div > label:nth-child(5) > span > input[type=range]', (element, value) => {
+            element.value = value;
+        }, String(size_arr[1]));
+        await page.focus('#customizations > div > label:nth-child(5) > span > input[type=range]');
+        await page.keyboard.press('ArrowRight');
+        await page.keyboard.press('ArrowLeft');
     };
 
     // album titles
