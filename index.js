@@ -265,6 +265,11 @@ import fs from 'fs';
         });
     }
 
+    // shadows
+    console.log('shadows...');
+    await page.waitForSelector('#shadowed > input[type=checkbox]');
+    await page.click('#shadowed > input[type=checkbox]');
+
     // padding
     if(padding !== '2'){
         console.log('padding...');
