@@ -1,15 +1,18 @@
 {
   "name": "topsters-download",
   "version": "1.0.0",
-  "description": "",
+  "description": "Puppeteer script for downloading chart from topsters.",
   "main": "index.js",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
+  "author": "renatocfrancisco",
   "license": "ISC",
   "dependencies": {
-    "puppeteer": "^20.1.1"
+    "@inquirer/input": "^1.0.3",
+    "@inquirer/prompts": "^1.0.3",
+    "puppeteer": "^20.1.2"
   }
 }
