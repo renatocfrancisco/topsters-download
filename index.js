@@ -83,7 +83,7 @@ import fs from 'fs';
 
     if (size === '25') {
         const rows = await input({
-            message: 'Select the number of rows',
+            message: 'Select the number of rows (1-12)',
             default: json_rows ? json_rows : '6',
             validate: (value) => {
                 const pass = value.match(
@@ -98,7 +98,7 @@ import fs from 'fs';
         });
 
         const columns = await input({
-            message: 'Select the number of columns',
+            message: 'Select the number of columns (1-12)',
             default: json_columns ? json_columns : '6',
             validate: (value) => {
                 const pass = value.match(
@@ -231,18 +231,30 @@ import fs from 'fs';
         await page.$eval('#customizations > div > label:nth-child(3) > span > input[type=range]', (element, value) => {
             element.value = value;
         }, String(size_arr[0]));
+
         // focus on the input and then type right and left arrow to trigger the change event
         await page.focus('#customizations > div > label:nth-child(3) > span > input[type=range]');
-        await page.keyboard.press('ArrowRight');
-        await page.keyboard.press('ArrowLeft');
-        await new Promise(r => setTimeout(r, 2000));
+        if(size_arr[0] === 12){
+            await page.keyboard.press('ArrowLeft');
+            await page.keyboard.press('ArrowRight');
+        }else{
+            await page.keyboard.press('ArrowRight');
+            await page.keyboard.press('ArrowLeft');
+        }
+        await new Promise(r => setTimeout(r, 1000));
 
         await page.$eval('#customizations > div > label:nth-child(5) > span > input[type=range]', (element, value) => {
             element.value = value;
         }, String(size_arr[1]));
         await page.focus('#customizations > div > label:nth-child(5) > span > input[type=range]');
-        await page.keyboard.press('ArrowRight');
-        await page.keyboard.press('ArrowLeft');
+        if(size_arr[1] === 12){
+            await page.keyboard.press('ArrowLeft');
+            await page.keyboard.press('ArrowRight');
+        }else{
+            await page.keyboard.press('ArrowRight');
+            await page.keyboard.press('ArrowLeft');
+        }
+        await new Promise(r => setTimeout(r, 1000));
     };
 
     // album titles
@@ -298,7 +310,7 @@ import fs from 'fs';
     await new Promise(r => setTimeout(r, 15000));
 
     await browser.close();
-    return null
+    process.exit()
 
     async function limparInput(selector) {
         await page.click(selector);
