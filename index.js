@@ -116,7 +116,7 @@ import fs from 'fs';
     };
 
     const padding = await input({
-        message: 'Select the padding of the chart',
+        message: 'Select the padding of the chart (1-20)',
         default: json_padding ? json_padding : '2',
         validate: (value) => {
             const pass = value.match(
@@ -298,8 +298,13 @@ import fs from 'fs';
             element.value = value;
         }, padding);
         await page.focus('#customizations > div > label:nth-child(19) > span > input[type=range]');
-        await page.keyboard.press('ArrowRight');
-        await page.keyboard.press('ArrowLeft');
+        if(padding === '20'){
+            await page.keyboard.press('ArrowLeft');
+            await page.keyboard.press('ArrowRight');
+        }else{
+            await page.keyboard.press('ArrowRight');
+            await page.keyboard.press('ArrowLeft');
+        }
     }
 
     console.log('rendering...');
