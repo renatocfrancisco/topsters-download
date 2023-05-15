@@ -130,7 +130,7 @@ import fs from 'fs';
 
     const opt_background_color = await confirm({
         message: 'Do you want to change the background color?',
-        initial: true
+        default: false
     });
 
     if(opt_background_color){
@@ -154,7 +154,7 @@ import fs from 'fs';
 
     const album_titles = await confirm({
         message: 'Do you want to display the album titles?',
-        initial: true
+        default: false,
     });
 
     if(album_titles) {
