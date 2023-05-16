@@ -7,178 +7,35 @@ import fs from 'fs';
   if (fs.existsSync('options.json')) {
     const options = fs.readFileSync('options.json')
     const data = JSON.parse(options)
-    var json_username = data.username
-    var json_rows = data.rows
-    var json_columns = data.columns
-    var json_padding = data.padding
-    var json_background_color = data.background_color
+    var json = [data.username, [data.rows, data.columns], data.padding, data.background_color, data.period, data.size, data.album_titles, data.album_titles_options, data.opt_background_color, data.hex_color]
   }
 
-  const username = await input({
-    message: 'Enter your last.fm username',
-    default: json_username || 'renatocfrancisc',
-    validate: (value) => {
-      const pass = value.match(
-        /^[a-zA-Z0-9]+$/
-      )
-      if (pass) {
-        return true
-      }
+  if (['-y'].includes(process.argv[2]) && !json) {
+    console.log('Not possible to execute option "-y" without a options.json')
+    process.exit()
+  }
+
+  if (['-y'].includes(process.argv[2]) && json) {
+    var [username, size_arr, padding, back_color, period, size, album_titles, album_titles_options, opt_background_color, hex_color] = json
+  } else {
+    var { username, size_arr, padding, back_color, period, size, album_titles, album_titles_options, opt_background_color, hex_color } = await optionsInputs()
+    // save options on a json file
+    const data = {
+      username,
+      rows: size_arr[0],
+      columns: size_arr[1],
+      padding,
+      background_color: back_color,
+      period,
+      size,
+      album_titles,
+      album_titles_options,
+      opt_background_color,
+      hex_color
     }
-  })
-
-  const period = await select({
-    message: 'Select the period of the chart',
-    choices: [
-      {
-        title: '7day',
-        value: '7day'
-
-      },
-      {
-        title: '1month',
-        value: '1month'
-      },
-      {
-        title: '3month',
-        value: '3month'
-      },
-      {
-        title: '6month',
-        value: '6month'
-      },
-      {
-        title: '12month',
-        value: '12month'
-      },
-      {
-        title: 'overall',
-        value: 'overall'
-      }
-    ]
-  })
-
-  const size = await select({
-    message: 'Select the size of the chart',
-    choices: [
-      {
-        title: 'collage',
-        value: '25'
-      },
-      {
-        title: '40',
-        value: '40'
-      },
-      {
-        title: '42',
-        value: '42'
-      },
-      {
-        title: '100',
-        value: '100'
-      }
-    ]
-  })
-
-  if (size === '25') {
-    const rows = await input({
-      message: 'Select the number of rows (1-12)',
-      default: json_rows || '6',
-      validate: (value) => {
-        const pass = value.match(
-          /^[0-9]+$/
-        )
-        if (pass) {
-          return true
-        }
-
-        return 'Please enter a valid number'
-      }
-    })
-
-    const columns = await input({
-      message: 'Select the number of columns (1-12)',
-      default: json_columns || '6',
-      validate: (value) => {
-        const pass = value.match(
-          /^[0-9]+$/
-        )
-        if (pass) {
-          return true
-        }
-
-        return 'Please enter a valid number'
-      }
-    })
-
-    var size_arr = [String(rows), String(columns)]
-  };
-
-  const padding = await input({
-    message: 'Select the padding of the chart (1-20)',
-    default: json_padding || '2',
-    validate: (value) => {
-      const pass = value.match(
-        /^[0-9]+$/
-      )
-      if (pass) {
-        return true
-      }
-    }
-  })
-
-  const opt_background_color = await confirm({
-    message: 'Do you want to change the background color?',
-    default: false
-  })
-
-  if (opt_background_color) {
-    const background_color = await input({
-      message: 'Enter the background color',
-      default: json_background_color || '000000',
-      validate: (value) => {
-        const pass = value.match(
-          /^[a-zA-Z0-9]+$/
-        )
-        if (pass) {
-          return true
-        }
-      }
-    })
-
-    var hex_color = '#' + background_color
-    var back_color = background_color
+    const jsonData = JSON.stringify(data)
+    fs.writeFileSync('options.json', jsonData, 'utf-8')
   }
-
-  const album_titles = await confirm({
-    message: 'Do you want to display the album titles?',
-    default: false
-  })
-
-  if (album_titles) {
-    const numbered = await confirm({
-      message: 'Do you want to display the album numbers?',
-      initial: true
-    })
-
-    const play_counts = await confirm({
-      message: 'Do you want to display the playcounts?',
-      initial: true
-    })
-
-    var album_titles_options = [numbered, play_counts]
-  }
-
-  // save options on a json file
-  const data = {
-    username,
-    rows: size_arr[0],
-    columns: size_arr[1],
-    padding,
-    background_color: back_color
-  }
-  const jsonData = JSON.stringify(data)
-  fs.writeFileSync('options.json', jsonData, 'utf-8')
 
   const browser = await puppeteer.launch({
     headless: false,
@@ -314,6 +171,163 @@ import fs from 'fs';
 
   await browser.close()
   process.exit()
+
+  async function optionsInputs () {
+    const username = await input({
+      message: 'Enter your last.fm username',
+      default: json ? json[0] : 'renatocfrancisc',
+      validate: (value) => {
+        const pass = value.match(
+          /^[a-zA-Z0-9]+$/
+        )
+        if (pass) {
+          return true
+        }
+      }
+    })
+
+    const period = await select({
+      message: 'Select the period of the chart',
+      choices: [
+        {
+          title: '7day',
+          value: '7day'
+        },
+        {
+          title: '1month',
+          value: '1month'
+        },
+        {
+          title: '3month',
+          value: '3month'
+        },
+        {
+          title: '6month',
+          value: '6month'
+        },
+        {
+          title: '12month',
+          value: '12month'
+        },
+        {
+          title: 'overall',
+          value: 'overall'
+        }
+      ]
+    })
+
+    const size = await select({
+      message: 'Select the size of the chart',
+      choices: [
+        {
+          title: 'collage',
+          value: '25'
+        },
+        {
+          title: '40',
+          value: '40'
+        },
+        {
+          title: '42',
+          value: '42'
+        },
+        {
+          title: '100',
+          value: '100'
+        }
+      ]
+    })
+
+    if (size === '25') {
+      const rows = await input({
+        message: 'Select the number of rows (1-12)',
+        default: json ? json[1][0] : '6',
+        validate: (value) => {
+          const pass = value.match(
+            /^[0-9]+$/
+          )
+          if (pass) {
+            return true
+          }
+
+          return 'Please enter a valid number'
+        }
+      })
+
+      const columns = await input({
+        message: 'Select the number of columns (1-12)',
+        default: json ? json[1][1] : '6',
+        validate: (value) => {
+          const pass = value.match(
+            /^[0-9]+$/
+          )
+          if (pass) {
+            return true
+          }
+
+          return 'Please enter a valid number'
+        }
+      })
+
+      var size_arr = [String(rows), String(columns)]
+    };
+
+    const padding = await input({
+      message: 'Select the padding of the chart (1-20)',
+      default: json ? json[2] : '2',
+      validate: (value) => {
+        const pass = value.match(
+          /^[0-9]+$/
+        )
+        if (pass) {
+          return true
+        }
+      }
+    })
+
+    const opt_background_color = await confirm({
+      message: 'Do you want to change the background color?',
+      default: false
+    })
+
+    if (opt_background_color) {
+      const background_color = await input({
+        message: 'Enter the background color',
+        default: json ? json[3] : '000000',
+        validate: (value) => {
+          const pass = value.match(
+            /^[a-zA-Z0-9]+$/
+          )
+          if (pass) {
+            return true
+          }
+        }
+      })
+
+      var hex_color = '#' + background_color
+      var back_color = background_color
+    }
+
+    const album_titles = await confirm({
+      message: 'Do you want to display the album titles?',
+      default: false
+    })
+
+    if (album_titles) {
+      const numbered = await confirm({
+        message: 'Do you want to display the album numbers?',
+        initial: true
+      })
+
+      const play_counts = await confirm({
+        message: 'Do you want to display the playcounts?',
+        initial: true
+      })
+
+      var album_titles_options = [numbered, play_counts]
+    }
+    return { username, size_arr, padding, back_color, period, size, album_titles, album_titles_options, opt_background_color, hex_color }
+  }
 
   async function limparInput (selector) {
     await page.click(selector)
