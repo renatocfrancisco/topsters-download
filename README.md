@@ -5,3 +5,7 @@
 ![JavaScript](https://img.shields.io/badge/Javascript-%23323330.svg?flat&logo=javascript&logoColor=%23F7DF1E)
 [![Inquirer.js](https://img.shields.io/badge/Inquirer.js-%23323330.svg?flat&logo=javascript&logoColor=%23F7DF1E)](https://github.com/SBoudrias/Inquirer.js)
 ![Puppeteer](https://img.shields.io/badge/Puppeteer-40B5A4?style=flat&logo=Puppeteer&logoColor=white)
+
+`node index.js [option]`
+
+option `-y` for using the values in options.json without inputs.
