@@ -1,5 +1,6 @@
 # topsters-download
 
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 ![GitHub repo size](https://img.shields.io/github/repo-size/renatocfrancisco/topsters-download)
 ![GitHub](https://img.shields.io/github/license/renatocfrancisco/topsters-download)
 ![JavaScript](https://img.shields.io/badge/Javascript-%23323330.svg?flat&logo=javascript&logoColor=%23F7DF1E)
