@@ -38,7 +38,7 @@ import fs from 'fs';
   }
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: 'new',
     args: ['--no-sandbox']
   })
 
