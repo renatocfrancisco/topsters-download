@@ -12,8 +12,8 @@
   "author": "renatocfrancisco",
   "license": "Unlicense",
   "dependencies": {
-    "@inquirer/input": "^1.1.2",
-    "@inquirer/prompts": "^1.2.3",
+    "@inquirer/input": "^1.2.1",
+    "@inquirer/prompts": "^2.1.1",
     "puppeteer": "^20.5.0"
   },
   "devDependencies": {
