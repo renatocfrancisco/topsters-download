@@ -1,4 +1,6 @@
-import { input, select, confirm } from '@inquirer/prompts'
+import input from '@inquirer/input'
+import confirm from '@inquirer/confirm'
+import select from '@inquirer/select'
 import puppeteer from 'puppeteer'
 import fs from 'fs';
 
