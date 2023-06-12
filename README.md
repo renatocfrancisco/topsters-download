@@ -7,6 +7,8 @@
 [![Inquirer.js](https://img.shields.io/badge/Inquirer.js-%23323330.svg?flat&logo=javascript&logoColor=%23F7DF1E)](https://github.com/SBoudrias/Inquirer.js)
 ![Puppeteer](https://img.shields.io/badge/Puppeteer-40B5A4?style=flat&logo=Puppeteer&logoColor=white)
 
+Puppeteer script for downloading chart from [topsters](https://www.neverendingchartrendering.org/). Because why not.
+
 `npm start` or `node index.js [option]`
 
 option `-y` for using the values in options.json without inputs.
