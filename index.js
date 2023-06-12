@@ -139,9 +139,10 @@ import fs from 'fs';
   // background color
   if (opt_background_color) {
     console.log('background color...')
-    await page.waitForSelector('#customizations > div > label:nth-child(15) > input[type=search]')
-    await limparInput('#customizations > div > label:nth-child(15) > input[type=search]')
-    await page.type('#customizations > div > label:nth-child(15) > input[type=search]', hex_color, {
+    const colorSelector = `#customizations > div > label:nth-child(${size === 25 ? '15' : '11'}) > input[type=search]`
+    await page.waitForSelector(colorSelector)
+    await limparInput(colorSelector)
+    await page.type(colorSelector, hex_color, {
       delay: 50
     })
   }
@@ -154,10 +155,11 @@ import fs from 'fs';
   // padding
   if (padding !== '2') {
     console.log('padding...')
-    await page.$eval('#customizations > div > label:nth-child(19) > span > input[type=range]', (element, value) => {
+    const paddingSelector = `#customizations > div > label:nth-child(${size === 25 ? '19' : '15'}) > span > input[type=range]`
+    await page.$eval(paddingSelector, (element, value) => {
       element.value = value
     }, padding)
-    await page.focus('#customizations > div > label:nth-child(19) > span > input[type=range]')
+    await page.focus(paddingSelector)
     if (padding === '20') {
       await page.keyboard.press('ArrowLeft')
       await page.keyboard.press('ArrowRight')
