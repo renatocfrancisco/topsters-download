@@ -139,7 +139,7 @@ import fs from 'fs';
   // background color
   if (opt_background_color) {
     console.log('background color...')
-    const colorSelector = `#customizations > div > label:nth-child(${size === 25 ? '15' : '11'}) > input[type=search]`
+    const colorSelector = `#customizations > div > label:nth-child(${size === '25' ? '15' : '11'}) > input[type=search]`
     await page.waitForSelector(colorSelector)
     await limparInput(colorSelector)
     await page.type(colorSelector, hex_color, {
@@ -155,7 +155,7 @@ import fs from 'fs';
   // padding
   if (padding !== '2') {
     console.log('padding...')
-    const paddingSelector = `#customizations > div > label:nth-child(${size === 25 ? '19' : '15'}) > span > input[type=range]`
+    const paddingSelector = `#customizations > div > label:nth-child(${size === '25' ? '19' : '15'}) > span > input[type=range]`
     await page.$eval(paddingSelector, (element, value) => {
       element.value = value
     }, padding)
