@@ -21,6 +21,9 @@ import fs from 'fs';
     var [username, size_arr, padding, back_color, period, size, album_titles, album_titles_options, opt_background_color, hex_color] = json
   } else {
     var { username, size_arr, padding, back_color, period, size, album_titles, album_titles_options, opt_background_color, hex_color } = await optionsInputs()
+    if (size_arr == undefined) {
+      size_arr = [6, 6]
+    }
     // save options on a json file
     const data = {
       username,
