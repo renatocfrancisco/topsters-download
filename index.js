@@ -1,4 +1,6 @@
-import { input, select, confirm } from '@inquirer/prompts'
+import input from '@inquirer/input'
+import confirm from '@inquirer/confirm'
+import select from '@inquirer/select'
 import puppeteer from 'puppeteer'
 import fs from 'fs';
 
@@ -19,6 +21,9 @@ import fs from 'fs';
     var [username, size_arr, padding, back_color, period, size, album_titles, album_titles_options, opt_background_color, hex_color] = json
   } else {
     var { username, size_arr, padding, back_color, period, size, album_titles, album_titles_options, opt_background_color, hex_color } = await optionsInputs()
+    if (size_arr == undefined) {
+      size_arr = [6, 6]
+    }
     // save options on a json file
     const data = {
       username,
@@ -134,9 +139,10 @@ import fs from 'fs';
   // background color
   if (opt_background_color) {
     console.log('background color...')
-    await page.waitForSelector('#customizations > div > label:nth-child(15) > input[type=search]')
-    await limparInput('#customizations > div > label:nth-child(15) > input[type=search]')
-    await page.type('#customizations > div > label:nth-child(15) > input[type=search]', hex_color, {
+    const colorSelector = `#customizations > div > label:nth-child(${size === '25' ? '15' : '11'}) > input[type=search]`
+    await page.waitForSelector(colorSelector)
+    await limparInput(colorSelector)
+    await page.type(colorSelector, hex_color, {
       delay: 50
     })
   }
@@ -149,10 +155,11 @@ import fs from 'fs';
   // padding
   if (padding !== '2') {
     console.log('padding...')
-    await page.$eval('#customizations > div > label:nth-child(19) > span > input[type=range]', (element, value) => {
+    const paddingSelector = `#customizations > div > label:nth-child(${size === '25' ? '19' : '15'}) > span > input[type=range]`
+    await page.$eval(paddingSelector, (element, value) => {
       element.value = value
     }, padding)
-    await page.focus('#customizations > div > label:nth-child(19) > span > input[type=range]')
+    await page.focus(paddingSelector)
     if (padding === '20') {
       await page.keyboard.press('ArrowLeft')
       await page.keyboard.press('ArrowRight')
