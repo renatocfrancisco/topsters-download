@@ -323,12 +323,12 @@ import fs from 'fs';
     if (album_titles) {
       const numbered = await confirm({
         message: 'Do you want to display the album numbers?',
-        initial: true
+        default: false
       })
 
       const play_counts = await confirm({
         message: 'Do you want to display the playcounts?',
-        initial: true
+        default: false
       })
 
       var album_titles_options = [numbered, play_counts]
