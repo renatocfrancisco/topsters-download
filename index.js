@@ -18,9 +18,9 @@ import fs from 'fs';
   }
 
   if (['-y'].includes(process.argv[2]) && json) {
-    var [username, size_arr, padding, back_color, period, size, album_titles, album_titles_options, opt_background_color, hex_color] = json
+    var [username, size_arr, padding, back_color, period, size, album_titles, opt_background_color, hex_color, album_titles_options] = json
   } else {
-    var { username, size_arr, padding, back_color, period, size, album_titles, album_titles_options, opt_background_color, hex_color } = await optionsInputs()
+    var { username, size_arr, padding, back_color, period, size, album_titles, opt_background_color, hex_color, album_titles_options } = await optionsInputs()
     if (size_arr == undefined) {
       size_arr = [6, 6]
     }
@@ -34,9 +34,9 @@ import fs from 'fs';
       period,
       size,
       album_titles,
-      album_titles_options,
       opt_background_color,
-      hex_color
+      hex_color,
+      album_titles_options
     }
     const jsonData = JSON.stringify(data)
     fs.writeFileSync('options.json', jsonData, 'utf-8')
@@ -294,7 +294,7 @@ import fs from 'fs';
 
     const opt_background_color = await confirm({
       message: 'Do you want to change the background color?',
-      default: false
+      default: json ? json[8] : false
     })
 
     if (opt_background_color) {
@@ -317,23 +317,23 @@ import fs from 'fs';
 
     const album_titles = await confirm({
       message: 'Do you want to display the album titles?',
-      default: false
+      default: json ? json[6] : false
     })
 
     if (album_titles) {
       const numbered = await confirm({
         message: 'Do you want to display the album numbers?',
-        initial: true
+        default: false
       })
 
       const play_counts = await confirm({
         message: 'Do you want to display the playcounts?',
-        initial: true
+        default: false
       })
 
       var album_titles_options = [numbered, play_counts]
     }
-    return { username, size_arr, padding, back_color, period, size, album_titles, album_titles_options, opt_background_color, hex_color }
+    return { username, size_arr, padding, back_color, period, size, album_titles, opt_background_color, hex_color, album_titles_options }
   }
 
   async function limparInput (selector) {
