@@ -11,4 +11,4 @@ Puppeteer script for downloading chart from [topsters](https://www.neverendingch
 
 `npm start` or `node index.js [option]`
 
-option `-y` for using the values in options.json without inputs.
+option `-y` for running without inputs, using the values in options.json.
