@@ -9,6 +9,6 @@
 
 Puppeteer script for downloading chart from [topsters](https://www.neverendingchartrendering.org/). Because why not.
 
-`npm start` or `node index.js [option]`
+`npm start` or `node topsters-download.js [option]`
 
 option `-y` for running without inputs, using the values in options.json.
