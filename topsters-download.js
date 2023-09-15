@@ -193,56 +193,26 @@ import fs from 'fs';
       }
     })
 
-    const period = await select({
-      message: 'Select the period of the chart',
-      choices: [
-        {
-          title: '7day',
-          value: '7day'
-        },
-        {
-          title: '1month',
-          value: '1month'
-        },
-        {
-          title: '3month',
-          value: '3month'
-        },
-        {
-          title: '6month',
-          value: '6month'
-        },
-        {
-          title: '12month',
-          value: '12month'
-        },
-        {
-          title: 'overall',
-          value: 'overall'
-        }
-      ]
+    const period = await confirm({
+      message: `Do you want to select the period of the chart? default: ${json ? json[4] : 'a week'}`,
+      default: false
+    }).then(async (answer) => {
+      if (answer) {
+        return await selectPeriod()
+      } else {
+        return json ? json[4] : '7day'
+      }
     })
 
-    const size = await select({
-      message: 'Select the size of the chart',
-      choices: [
-        {
-          title: 'collage',
-          value: '25'
-        },
-        {
-          title: '40',
-          value: '40'
-        },
-        {
-          title: '42',
-          value: '42'
-        },
-        {
-          title: '100',
-          value: '100'
-        }
-      ]
+    const size = await confirm({
+      message: `Do you want to select the size of the chart? default: ${json ? json[5] : '42'}`,
+      default: false
+    }).then(async (answer) => {
+      if (answer) {
+        return await selectSize()
+      } else {
+        return json ? json[5] : '42'
+      }
     })
 
     if (size === '25') {
@@ -334,6 +304,62 @@ import fs from 'fs';
       var album_titles_options = [numbered, play_counts]
     }
     return { username, size_arr, padding, back_color, period, size, album_titles, opt_background_color, hex_color, album_titles_options }
+
+    async function selectSize () {
+      return await select({
+        message: 'Select the size of the chart',
+        choices: [
+          {
+            name: 'collage',
+            value: '25'
+          },
+          {
+            name: '40',
+            value: '40'
+          },
+          {
+            name: '42',
+            value: '42'
+          },
+          {
+            name: '100',
+            value: '100'
+          }
+        ]
+      })
+    }
+
+    async function selectPeriod () {
+      return await select({
+        message: 'Select the period of the chart',
+        choices: [
+          {
+            name: 'a week',
+            value: '7day'
+          },
+          {
+            name: '1 month',
+            value: '1month'
+          },
+          {
+            name: '3 months',
+            value: '3month'
+          },
+          {
+            name: '6 months',
+            value: '6month'
+          },
+          {
+            name: '12 months',
+            value: '12month'
+          },
+          {
+            name: 'overall',
+            value: 'overall'
+          }
+        ]
+      })
+    }
   }
 
   async function limparInput (selector) {
