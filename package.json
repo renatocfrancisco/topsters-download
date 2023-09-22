@@ -15,7 +15,7 @@
     "@inquirer/confirm": "^2.0.12",
     "@inquirer/input": "^1.2.11",
     "@inquirer/select": "^1.2.11",
-    "puppeteer": "^21.2.1"
+    "puppeteer": "^21.3.3"
   },
   "devDependencies": {
     "standard": "^17.1.0"
