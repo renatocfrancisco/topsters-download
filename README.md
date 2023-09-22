@@ -10,7 +10,8 @@
 Puppeteer script for downloading chart from [topsters](https://www.neverendingchartrendering.org/). Because why not.
 
 [Download zip file](https://github.com/renatocfrancisco/topsters-download/archive/refs/heads/main.zip), get the [latest release](https://github.com/renatocfrancisco/topsters-download/releases/latest) or use:
-```
+
+```console
 git clone https://github.com/renatocfrancisco/topsters-download
 ```
 
