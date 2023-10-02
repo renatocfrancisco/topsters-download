@@ -12,10 +12,10 @@
   "author": "renatocfrancisco",
   "license": "Unlicense",
   "dependencies": {
-    "@inquirer/confirm": "^2.0.12",
-    "@inquirer/input": "^1.2.11",
-    "@inquirer/select": "^1.2.11",
-    "puppeteer": "^21.3.3"
+    "@inquirer/confirm": "^2.0.13",
+    "@inquirer/input": "^1.2.12",
+    "@inquirer/select": "^1.2.12",
+    "puppeteer": "^21.3.6"
   },
   "devDependencies": {
     "standard": "^17.1.0"
