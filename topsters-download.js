@@ -158,14 +158,14 @@ async function inputPadding (obj = {}) {
 async function confirmBackgroundColor (obj = {}) {
   return await confirm({
     message: 'Do you want to change the background color?',
-    default: obj.opt_background_color ? obj.opt_background_color : false
+    default: obj.optBackgroundColor ? obj.optBackgroundColor : false
   })
 }
 
 async function inputBackgroundColor (obj = {}) {
   return await input({
     message: 'Enter the background color',
-    default: obj.hex_color ? obj.hex_color : '000000',
+    default: obj.hexColor ? obj.hexColor : '000000',
     validate: (value) => {
       const pass = value.match(/^[a-zA-Z0-9]+$/)
       if (pass) {
@@ -178,7 +178,7 @@ async function inputBackgroundColor (obj = {}) {
 async function confirmAlbumTitles (obj = {}) {
   return await confirm({
     message: 'Do you want to display the album titles?',
-    default: obj.album_titles ? obj.album_titles : false
+    default: obj.albumTitles ? obj.albumTitles : false
   })
 }
 
@@ -212,8 +212,8 @@ async function confirmPlayCounts () {
   if (['-y'].includes(process.argv[2]) && json) {
     await downloadTopstersImage(json)
   } else {
-    let hex_color = '#000'
-    let album_titles_options = [false, false]
+    let hexColor = '#000'
+    let albumTitlesOptions = [false, false]
     let rows = 6
     let columns = 6
 
@@ -227,17 +227,17 @@ async function confirmPlayCounts () {
     }
 
     const padding = await inputPadding(json)
-    const opt_background_color = await confirmBackgroundColor(json)
-    if (opt_background_color) {
-      const back_color = await inputBackgroundColor(json)
-      hex_color = back_color[0] === '#' ? back_color : '#' + back_color
+    const optBackgroundColor = await confirmBackgroundColor(json)
+    if (optBackgroundColor) {
+      const backColor = await inputBackgroundColor(json)
+      hexColor = backColor[0] === '#' ? backColor : '#' + backColor
     }
 
-    const album_titles = await confirmAlbumTitles(json)
-    if (album_titles) {
+    const albumTitles = await confirmAlbumTitles(json)
+    if (albumTitles) {
       const numbered = await confirmNumbered(json)
-      const play_counts = await confirmPlayCounts(json)
-      album_titles_options = [numbered, play_counts]
+      const playCounts = await confirmPlayCounts(json)
+      albumTitlesOptions = [numbered, playCounts]
     }
 
     const data = {
@@ -247,10 +247,10 @@ async function confirmPlayCounts () {
       padding,
       period,
       size,
-      album_titles,
-      opt_background_color,
-      hex_color,
-      album_titles_options
+      albumTitles,
+      optBackgroundColor,
+      hexColor,
+      albumTitlesOptions
     }
     const jsonData = JSON.stringify(data)
     fs.writeFileSync('options.json', jsonData, 'utf-8')
@@ -321,18 +321,18 @@ async function confirmPlayCounts () {
     };
 
     // album titles
-    if (data.album_titles) {
+    if (data.albumTitles) {
       console.log('album titles...')
       await page.waitForSelector('#titled > input[type=checkbox]')
       await page.click('#titled > input[type=checkbox]')
 
-      if (data.album_titles_options[0]) {
+      if (data.albumTitlesOptions[0]) {
         console.log('numbered...')
         await page.waitForSelector('#numbered > input[type=checkbox]')
         await page.click('#numbered > input[type=checkbox]')
       }
 
-      if (data.album_titles_options[1]) {
+      if (data.albumTitlesOptions[1]) {
         console.log('play counts...')
         await page.waitForSelector('#playcounts > input[type=checkbox]')
         await page.click('#playcounts > input[type=checkbox]')
@@ -340,12 +340,12 @@ async function confirmPlayCounts () {
     }
 
     // background color
-    if (data.opt_background_color) {
+    if (data.optBackgroundColor) {
       console.log('background color...')
       const colorSelector = `#customizations > div > label:nth-child(${data.size === '25' ? '15' : '11'}) > input[type=search]`
       await page.waitForSelector(colorSelector)
       await limparInput(colorSelector)
-      await page.type(colorSelector, data.hex_color, {
+      await page.type(colorSelector, data.hexColor, {
         delay: 50
       })
     }
