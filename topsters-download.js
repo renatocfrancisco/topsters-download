@@ -5,7 +5,6 @@ import confirm from '@inquirer/confirm'
 import select from '@inquirer/select'
 
 async function inputUsername (obj = {}) {
-
   return await input({
     message: 'Enter your last.fm username',
     default: obj.username ? obj.username : 'renatocfrancisc',
@@ -215,7 +214,8 @@ async function confirmPlayCounts () {
   } else {
     let hex_color = '#000'
     let album_titles_options = [false, false]
-    let rows, columns = 6
+    let rows = 6
+    let columns = 6
 
     const username = await inputUsername(json)
     const period = await confirmPeriod(json)
@@ -259,9 +259,6 @@ async function confirmPlayCounts () {
   }
 
   async function downloadTopstersImage (data) {
-
-    console.log(data)
-
     const browser = await puppeteer.launch({
       headless: 'new',
       args: ['--no-sandbox']
@@ -289,12 +286,12 @@ async function confirmPlayCounts () {
     // import
     await page.click('#lastfm-modal > div:nth-child(8) > button')
     console.log('importing...')
-    await new Promise(r => setTimeout(r, 5000))
+    await new Promise((resolve) => setTimeout(resolve, 5000))
 
     // options
     console.log('options...')
     await page.click('#customizations > button:nth-child(9)')
-    await new Promise(r => setTimeout(r, 2000))
+    await new Promise((resolve) => setTimeout(resolve, 2000))
 
     // size
     console.log('size...')
@@ -306,7 +303,7 @@ async function confirmPlayCounts () {
     if (data.size === '25') {
       console.log('rows / columns...')
       await page.waitForSelector('#customizations > div > label:nth-child(3) > span > input[type=range]')
-      await new Promise(r => setTimeout(r, 2000))
+      await new Promise((resolve) => setTimeout(resolve, 2000))
 
       await page.$eval('#customizations > div > label:nth-child(3) > span > input[type=range]', (element, value) => {
         element.value = value
@@ -380,7 +377,7 @@ async function confirmPlayCounts () {
     await page.click('#buttons > form > button:nth-child(8)')
 
     console.log('waiting for rendering...')
-    await new Promise(r => setTimeout(r, 15000))
+    await new Promise((resolve) => setTimeout(resolve, 15000))
 
     await browser.close()
     process.exit()
@@ -393,7 +390,7 @@ async function confirmPlayCounts () {
         await page.keyboard.press('ArrowRight')
         await page.keyboard.press('ArrowLeft')
       }
-      await new Promise(r => setTimeout(r, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 1000))
     }
 
     async function limparInput (selector) {
