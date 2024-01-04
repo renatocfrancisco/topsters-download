@@ -2,6 +2,7 @@
 
 ![GitHub](https://img.shields.io/github/license/renatocfrancisco/topsters-download)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/renatocfrancisco/topsters-download?style=flat)
 ![GitHub repo size](https://img.shields.io/github/repo-size/renatocfrancisco/topsters-download)
 ![JavaScript](https://img.shields.io/badge/Javascript-%23323330.svg?flat&logo=javascript&logoColor=%23F7DF1E)
 [![Inquirer.js](https://img.shields.io/badge/Inquirer.js-%23323330.svg?flat&logo=javascript&logoColor=%23F7DF1E)](https://github.com/SBoudrias/Inquirer.js)
