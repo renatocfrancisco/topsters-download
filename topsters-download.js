@@ -286,12 +286,12 @@ async function confirmPlayCounts () {
     // import
     await page.click('#lastfm-modal > div:nth-child(8) > button')
     console.log('importing...')
-    await new Promise((resolve) => setTimeout(resolve, 5000))
+    await delay(5000)
 
     // options
     console.log('options...')
     await page.click('#customizations > button:nth-child(9)')
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    await delay(2000)
 
     // size
     console.log('size...')
@@ -303,7 +303,7 @@ async function confirmPlayCounts () {
     if (data.size === '25') {
       console.log('rows / columns...')
       await page.waitForSelector('#customizations > div > label:nth-child(3) > span > input[type=range]')
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      await delay(2000)
 
       await page.$eval('#customizations > div > label:nth-child(3) > span > input[type=range]', (element, value) => {
         element.value = value
@@ -377,7 +377,7 @@ async function confirmPlayCounts () {
     await page.click('#buttons > form > button:nth-child(8)')
 
     console.log('waiting for rendering...')
-    await new Promise((resolve) => setTimeout(resolve, 15000))
+    await delay(15000)
 
     await browser.close()
     process.exit()
@@ -390,7 +390,7 @@ async function confirmPlayCounts () {
         await page.keyboard.press('ArrowRight')
         await page.keyboard.press('ArrowLeft')
       }
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await delay(1000)
     }
 
     async function limparInput (selector) {
@@ -400,5 +400,9 @@ async function confirmPlayCounts () {
       await page.keyboard.up('Control')
       await page.keyboard.press('Backspace')
     }
+  }
+
+  async function delay (ms) {
+    await new Promise((resolve) => setTimeout(resolve, ms))
   }
 })()
