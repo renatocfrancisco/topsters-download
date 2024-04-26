@@ -12,7 +12,7 @@
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://stand-with-ukraine.pp.ua)
 [![StandWithPalestine](https://raw.githubusercontent.com/Safouene1/support-palestine-banner/master/StandWithPalestine.svg)](https://techforpalestine.org/learn-more)
 
-Puppeteer script for downloading chart from [**topsters**](https://www.neverendingchartrendering.org/). Because why not.
+Puppeteer script for downloading chart from [**topsters**](https://topsters.org/). Because why not.
 
 [**Download zip file**](https://github.com/renatocfrancisco/topsters-download/archive/refs/heads/main.zip), get the [**latest release**](https://github.com/renatocfrancisco/topsters-download/releases/latest) or use:
 
