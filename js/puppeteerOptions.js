@@ -1,5 +1,5 @@
 export const options = {
-  headless: false,
+  headless: 'new',
   defaultViewport: null,
   args: ['--no-sandbox', '--start-maximized']
 }
