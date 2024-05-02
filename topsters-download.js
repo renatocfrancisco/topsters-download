@@ -2,61 +2,56 @@ import fs from 'fs'
 import puppeteer from 'puppeteer'
 import { inputUsername, confirmPeriod, confirmSize, inputRows, inputColumns, inputPadding, confirmAlbumTitles, confirmNumbered } from './js/inquirerInputs.js'
 import selectors from './js/selectors.js'
+import { options } from './js/puppeteerOptions.js'
+
+async function delay (ms = 1000) {
+  await new Promise((resolve) => setTimeout(resolve, ms))
+}
 
 (async () => {
   let json = {}
 
-  // if (fs.existsSync('options.json')) {
-  //   const options = fs.readFileSync('options.json')
-  //   json = JSON.parse(options)
-  // }
+  if (fs.existsSync('options.json')) {
+    const options = fs.readFileSync('options.json')
+    json = JSON.parse(options)
+  }
 
-  if (['-y'].includes(process.argv[2]) && !json) {
+  const yArgument = ['-y'].includes(process.argv[2])
+  const emptyJson = !Object.keys(json).length
+
+  if (yArgument && emptyJson) {
     console.log('Not possible to execute option "-y" without a options.json')
     process.exit()
   }
 
-  if (['-y'].includes(process.argv[2]) && json) {
+  if (yArgument && !emptyJson) {
     await downloadTopstersImage(json)
   } else {
-    // const rows = 6
-    // const columns = 6
+    const data = {}
 
-    // const username = await inputUsername(json)
-    // const period = await confirmPeriod(json)
-    // const size = await confirmSize(json)
+    data.username = await inputUsername(json)
+    data.period = await confirmPeriod(json)
+    data.size = await confirmSize(json)
 
-    // // if (size === '25') {
-    // //   rows = await inputRows(json)
-    // //   columns = await inputColumns(json)
-    // // }
-
-    // const padding = await inputPadding(json)
-    // const albumTitles = await confirmAlbumTitles(json)
-    // // if (albumTitles) {
-    // //   const numbered = await confirmNumbered(json)
-    // // }
-
-    const data = {
-      username: 'renatocfrancisc',
-      rows: 5,
-      columns: 5,
-      padding: 6,
-      period: '7day',
-      albumTitles: false
+    if (data.size === '25') {
+      data.rows = await inputRows(json)
+      data.columns = await inputColumns(json)
     }
-    // const jsonData = JSON.stringify(data)
-    // fs.writeFileSync('options.json', jsonData, 'utf-8')
+
+    data.gap = await inputPadding(json)
+    data.albumTitles = await confirmAlbumTitles(json)
+    if (data.albumTitles) {
+      data.numbered = await confirmNumbered()
+    }
+
+    const jsonData = JSON.stringify(data)
+    fs.writeFileSync('options.json', jsonData, 'utf-8')
 
     await downloadTopstersImage(data)
   }
 
   async function downloadTopstersImage (data) {
-    const browser = await puppeteer.launch({
-      headless: false,
-      defaultViewport: null,
-      args: ['--no-sandbox', '--start-maximized']
-    })
+    const browser = await puppeteer.launch(options)
 
     const page = await browser.newPage()
     const urlTopsters = 'https://topsters.org/'
@@ -73,7 +68,10 @@ import selectors from './js/selectors.js'
     await page.type(selectors.usernameInput, data.username, { delay: 50 })
     await page.select(selectors.periodSelect, data.period)
     await page.click(selectors.importButton)
-
+    page.on('dialog', async (dialog) => {
+      await dialog.accept()
+    })
+    await delay()
     await page.click(selectors.optionsTab)
 
     async function cleanTextInput (selector) {
@@ -87,14 +85,11 @@ import selectors from './js/selectors.js'
     await page.waitForSelector(selectors.titleInput)
     await cleanTextInput(selectors.titleInput)
 
-    if (data.albumTitles) {
-      await page.click(selectors.titlesCheck)
-    }
-
-    async function manipulateInput (selector) {
-      const value = await page.$eval(selector, (input) => parseInt(input.max))
-      const maxValue = await page.$eval(selector, (input) => parseInt(input.value))
-      if (value === maxValue) {
+    async function manipulateSliderInput (selector) {
+      const max = await page.$eval(selector, (input) => parseInt(input.max))
+      const value = await page.$eval(selector, (input) => parseInt(input.value))
+      await page.focus(selector)
+      if (value === max) {
         await page.keyboard.press('ArrowLeft')
         await page.keyboard.press('ArrowRight')
       } else {
@@ -105,24 +100,30 @@ import selectors from './js/selectors.js'
 
     await page.$eval(selectors.widthInput, (element, value) => {
       element.value = value
-    }, String(data.columns)).then(() => manipulateInput(selectors.widthInput))
+    }, data.columns).then(() => manipulateSliderInput(selectors.widthInput))
 
-    await page.$eval(selectors.heightInput, (element, value) => {
-      element.value = value
-    }, String(data.rows)).then(() => manipulateInput(selectors.heightInput))
+    if (data.size === '25') {
+      await page.$eval(selectors.heightInput, (element, value) => {
+        element.value = value
+      }, data.rows).then(() => manipulateSliderInput(selectors.heightInput))
 
-    await page.$eval(selectors.gapInput, (element, value) => {
-      element.value = value
-    }, data.gap).then(() => manipulateInput(selectors.gapInput))
+      await page.$eval(selectors.gapInput, (element, value) => {
+        element.value = value
+      }, data.gap).then(() => manipulateSliderInput(selectors.gapInput))
+    }
+
+    if (!data.albumTitles) {
+      await page.click(selectors.titlesCheck)
+    } else {
+      if (data.numbered) {
+        await page.click(selectors.numbersCheck)
+      }
+    }
 
     await page.click(selectors.downloadButton)
-    await delay(15000)
+    await delay(20000)
 
     await browser.close()
     process.exit()
-  }
-
-  async function delay (ms) {
-    await new Promise((resolve) => setTimeout(resolve, ms))
   }
 })()
