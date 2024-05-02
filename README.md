@@ -24,6 +24,6 @@ To start: `npm start` or `node topsters-download.js [option]`
 
 Option `-y` for running without inputs, using the values in `options.json`.
 
-![WindowsTerminal_PBcOGKZgCw](https://github.com/renatocfrancisco/topsters-download/assets/56325092/eb29d628-a703-4022-83f3-780d699f9ccb)
+![Code_KXBU4IelLC](https://github.com/renatocfrancisco/topsters-download/assets/56325092/5e7f7328-5d2d-45a4-b6b3-c6cf01811c77)
 
 [**Thanks for the code!**](https://thanksforthecode.com/?name=topsters-download)
