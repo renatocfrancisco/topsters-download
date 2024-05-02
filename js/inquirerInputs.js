@@ -109,7 +109,7 @@ export async function confirmSize (obj = {}) {
 export async function inputRows (obj = {}) {
   return await input({
     message: 'Select the number of rows (1-12)',
-    default: obj.rows ? obj.rows : '6',
+    default: obj.rows ? obj.rows : '5',
     validate: (value) => {
       const pass = value.match(/^[0-9]+$/)
       if (pass) {
@@ -124,7 +124,7 @@ export async function inputRows (obj = {}) {
 export async function inputColumns (obj = {}) {
   return await input({
     message: 'Select the number of columns (1-12)',
-    default: obj.columns ? obj.columns : '6',
+    default: obj.columns ? obj.columns : '5',
     validate: (value) => {
       const pass = value.match(/^[0-9]+$/)
       if (pass) {
@@ -138,8 +138,8 @@ export async function inputColumns (obj = {}) {
 
 export async function inputPadding (obj = {}) {
   return await input({
-    message: 'Select the padding of the chart (1-20)',
-    default: obj.padding ? obj.padding : '2',
+    message: 'Select the padding of the chart (0-150)',
+    default: obj.gap ? obj.gap : '6',
     validate: (value) => {
       const pass = value.match(/^[0-9]+$/)
       if (pass) {
