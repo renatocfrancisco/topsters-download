@@ -151,14 +151,14 @@ export async function inputPadding (obj = {}) {
 
 export async function confirmAlbumTitles (obj = {}) {
   return await confirm({
-    message: 'Do you want to display the album titles?',
+    message: 'Do you want to display album titles?',
     default: obj.albumTitles ? obj.albumTitles : false
   })
 }
 
 export async function confirmNumbered () {
   return await confirm({
-    message: 'Do you want to display the album numbers?',
+    message: 'Do you want to display numbers next to the album titles?',
     default: false
   })
 }
