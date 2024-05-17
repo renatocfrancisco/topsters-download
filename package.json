@@ -1,6 +1,6 @@
 {
   "name": "topsters-download",
-  "version": "2.0.1",
+  "version": "2.1",
   "description": "Puppeteer script for downloading chart from topsters.",
   "main": "topsters-download.js",
   "private": true,
