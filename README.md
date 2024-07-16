@@ -14,6 +14,8 @@
 
 Puppeteer script for downloading chart from [**topsters**](https://topsters.org/). Because why not.
 
+This will inevitably break in the future. But hey, sometimes it's fun to create useless things.
+
 [**Download zip file**](https://github.com/renatocfrancisco/topsters-download/archive/refs/heads/main.zip), get the [**latest release**](https://github.com/renatocfrancisco/topsters-download/releases/latest) or use:
 
 ```console
