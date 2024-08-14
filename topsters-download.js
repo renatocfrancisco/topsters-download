@@ -1,8 +1,18 @@
 import fs from 'fs'
 import puppeteer from 'puppeteer'
-import { inputUsername, confirmPeriod, confirmSize, inputRows, inputColumns, inputPadding, confirmAlbumTitles, confirmNumbered } from './js/inquirerInputs.js'
+import {
+  inputUsername,
+  confirmPeriod,
+  confirmSize,
+  inputRows,
+  inputColumns,
+  inputPadding,
+  confirmAlbumTitles,
+  confirmNumbered
+} from './js/inquirerInputs.js'
 import selectors from './js/selectors.js'
 import { options } from './js/puppeteerOptions.js'
+import { sizeOptions } from './js/sizeOptions.js'
 
 async function delay (ms = 1000) {
   await new Promise((resolve) => setTimeout(resolve, ms))
@@ -36,6 +46,8 @@ async function delay (ms = 1000) {
     if (data.size === '25') {
       data.rows = await inputRows(json)
       data.columns = await inputColumns(json)
+    } else {
+      [data.rows, data.columns] = sizeOptions(data.size)
     }
 
     data.gap = await inputPadding(json)
@@ -46,6 +58,7 @@ async function delay (ms = 1000) {
 
     const jsonData = JSON.stringify(data)
     fs.writeFileSync('options.json', jsonData, 'utf-8')
+    console.clear()
 
     await downloadTopstersImage(data)
   }
@@ -55,11 +68,13 @@ async function delay (ms = 1000) {
 
     const page = await browser.newPage()
     const urlTopsters = 'https://topsters.org/'
-    await page.goto(urlTopsters, {
-      waitUntil: 'networkidle2'
-    }).catch(error => {
-      throw new Error('Website not loaded: ', error)
-    })
+    await page
+      .goto(urlTopsters, {
+        waitUntil: 'networkidle2'
+      })
+      .catch((error) => {
+        throw new Error('Website not loaded: ', error)
+      })
 
     await Promise.all([
       page.waitForSelector(selectors.importTab),
@@ -68,9 +83,15 @@ async function delay (ms = 1000) {
     await page.type(selectors.usernameInput, data.username, { delay: 50 })
     await page.select(selectors.periodSelect, data.period)
     await page.click(selectors.importButton)
-    page.on('dialog', async (dialog) => {
-      await dialog.accept()
-    })
+    await page
+      .waitForResponse((response) =>
+        response.url().includes('https://api.topsters.org/api/lastfm/')
+      )
+      .then(() => {
+        page.on('dialog', async (dialog) => {
+          await dialog.accept()
+        })
+      })
     await delay()
     await page.click(selectors.optionsTab)
 
@@ -87,7 +108,9 @@ async function delay (ms = 1000) {
 
     async function manipulateSliderInput (selector) {
       const max = await page.$eval(selector, (input) => parseInt(input.max))
-      const value = await page.$eval(selector, (input) => parseInt(input.value))
+      const value = await page.$eval(selector, (input) =>
+        parseInt(input.value)
+      )
       await page.focus(selector)
       if (value === max) {
         await page.keyboard.press('ArrowLeft')
@@ -98,19 +121,35 @@ async function delay (ms = 1000) {
       }
     }
 
-    await page.$eval(selectors.widthInput, (element, value) => {
-      element.value = value
-    }, data.columns).then(() => manipulateSliderInput(selectors.widthInput))
+    await page
+      .$eval(
+        selectors.widthInput,
+        (element, value) => {
+          element.value = value
+        },
+        data.columns
+      )
+      .then(() => manipulateSliderInput(selectors.widthInput))
 
-    if (data.size === '25') {
-      await page.$eval(selectors.heightInput, (element, value) => {
-        element.value = value
-      }, data.rows).then(() => manipulateSliderInput(selectors.heightInput))
+    await page
+      .$eval(
+        selectors.heightInput,
+        (element, value) => {
+          element.value = value
+        },
+        data.rows
+      )
+      .then(() => manipulateSliderInput(selectors.heightInput))
 
-      await page.$eval(selectors.gapInput, (element, value) => {
-        element.value = value
-      }, data.gap).then(() => manipulateSliderInput(selectors.gapInput))
-    }
+    await page
+      .$eval(
+        selectors.gapInput,
+        (element, value) => {
+          element.value = value
+        },
+        data.gap
+      )
+      .then(() => manipulateSliderInput(selectors.gapInput))
 
     if (!data.albumTitles) {
       await page.click(selectors.titlesCheck)
@@ -120,9 +159,33 @@ async function delay (ms = 1000) {
       }
     }
 
-    await page.click(selectors.downloadButton)
-    await delay(20000)
+    const numImgs =
+      data.size === '25'
+        ? parseInt(data.rows) * parseInt(data.columns)
+        : parseInt(data.size)
 
+    await page.click(selectors.downloadButton)
+    for (let i = 0; i < numImgs; i++) {
+      await page
+        .waitForResponse(
+          (response) =>
+            response.url().includes('https://lastfm.freetls.fastly.net/i/u/') &&
+            response.status() === 200,
+          { timeout: 500 }
+        )
+        .then(() => {
+          console.clear()
+          console.log(`Image ${i + 1} of ${numImgs} downloaded`)
+        })
+        .catch(() => {
+          console.clear()
+          console.log(`Image ${i + 1} of ${numImgs} was not requested`)
+        })
+    }
+    await delay(10000)
+
+    console.clear()
+    console.log('Done!')
     await browser.close()
     process.exit()
   }
