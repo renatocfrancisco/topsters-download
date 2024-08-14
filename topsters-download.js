@@ -85,7 +85,7 @@ async function delay (ms = 1000) {
     await page.click(selectors.importButton)
     await page
       .waitForResponse((response) =>
-        response.url().includes('https://api.topsters.org/api/lastfm/')
+        response.url().startsWith('https://api.topsters.org/api/lastfm/')
       )
       .then(() => {
         page.on('dialog', async (dialog) => {
@@ -169,7 +169,9 @@ async function delay (ms = 1000) {
       await page
         .waitForResponse(
           (response) =>
-            response.url().includes('https://lastfm.freetls.fastly.net/i/u/') &&
+            response
+              .url()
+              .startsWith('https://lastfm.freetls.fastly.net/i/u/') &&
             response.status() === 200,
           { timeout: 500 }
         )
