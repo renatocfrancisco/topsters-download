@@ -13,6 +13,7 @@ import {
 import selectors from './js/selectors.js'
 import { options } from './js/puppeteerOptions.js'
 import { sizeOptions } from './js/sizeOptions.js'
+import { waitImageResponses, waitUntilDownload } from './js/promises.js'
 
 async function delay (ms = 1000) {
   await new Promise((resolve) => setTimeout(resolve, ms))
@@ -165,30 +166,11 @@ async function delay (ms = 1000) {
         : parseInt(data.size)
 
     await page.click(selectors.downloadButton)
-    for (let i = 0; i < numImgs; i++) {
-      await page
-        .waitForResponse(
-          (response) =>
-            response
-              .url()
-              .startsWith('https://lastfm.freetls.fastly.net/i/u/') &&
-            response.status() === 200,
-          { timeout: 500 }
-        )
-        .then(() => {
-          console.clear()
-          console.log(`Image ${i + 1} of ${numImgs} downloaded`)
-        })
-        .catch(() => {
-          console.clear()
-          console.log(`Image ${i + 1} of ${numImgs} was not requested`)
-        })
-    }
-    await delay(10000)
 
-    console.clear()
-    console.log('Done!')
+    await waitImageResponses(page, numImgs)
+    await waitUntilDownload(page)
+
+    await delay(5000)
     await browser.close()
-    process.exit()
   }
 })()
