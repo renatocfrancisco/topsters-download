@@ -88,8 +88,11 @@ async function delay (ms = 1000) {
       .waitForResponse((response) =>
         response.url().startsWith('https://api.topsters.org/api/lastfm/')
       )
-      .then(() => {
+      .then((response) => {
         page.on('dialog', async (dialog) => {
+          if (response.status() === 400) {
+            throw new Error(dialog.message() || 'Check your last.fm username')
+          }
           await dialog.accept()
         })
       })
