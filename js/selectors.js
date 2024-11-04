@@ -6,12 +6,14 @@ const selectors = {
   periodSelect: '#lastFmPeriodDropdown',
   importButton: '#lastfmImportButton',
   optionsTab: `${navList}:nth-child(2) > button`,
-  titlesCheck: '#display-titles',
-  widthInput: '#x-axis',
-  heightInput: '#y-axis',
+  titlesCheck:
+    'div.tabbed-sidebar-block > div.sidebar-content > div.options-list > label:nth-child(4) > span.switch', // '#showTitles',
+  widthInput: '#chartWidth',
+  heightInput: '#chartHeight',
   gapInput: '#gap',
   titleInput: '#title',
-  numbersCheck: '#show-numbers',
+  numbersCheck:
+    'div.tabbed-sidebar-block > div.sidebar-content > div.options-list > label:nth-child(16) > span.switch', // '#showNumbers',
   downloadButton: '#top-bar > button'
 }
 
